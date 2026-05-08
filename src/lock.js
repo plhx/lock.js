@@ -63,7 +63,8 @@
         acquire({ blocking = true, timeout } = {}) {
             return new Promise((resolve, reject) => {
                 if (!blocking && this.locked) {
-                    throw new LockError()
+                    reject(new LockError())
+                    return
                 }
                 const lock = { resolve, timer: null }
                 if (blocking && Number.isSafeInteger(timeout)) {
@@ -82,11 +83,13 @@
          */
         release() {
             const first = this.#queue[0]
-            first?.resolve(() => {
+            if (first) {
                 clearTimeout(first.timer)
-                this.#queue.shift()
-                this.release()
-            })
+                first.resolve(() => {
+                    this.#queue.shift()
+                    this.release()
+                })
+            }
         }
 
         /**
