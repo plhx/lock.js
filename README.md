@@ -11,6 +11,12 @@ Promise ベースの排他制御を簡単に実現できます。
   - `timeout = <millis>` オプションによるタイムアウト付きロック取得
 - `LockError` / `LockTimedoutError` による明確なエラー種別
 
+## CDNからの利用
+
+```html
+<script src="https://js.plasticheart.info/lock/latest/lock.min.js"></script>
+```
+
 ## 使い方
 
 ### 基本的な排他実行 (`runExclusive`)
