@@ -21,7 +21,7 @@
     }
 
     /**
-     * @type T
+     * @template T
      * @param {T | Promise<T>} value
      * @returns {Promise<T>}
      */
@@ -32,10 +32,16 @@
         return value
     }
 
+    /**
+     * @extends {Error}
+     */
     class LockError extends Error {
 
     }
 
+    /**
+     * @extends {LockError}
+     */
     class LockTimedoutError extends LockError {
 
     }
@@ -55,10 +61,10 @@
         }
 
         /**
-         * @param {Object} options
-         * @param {boolean} options.blocking
-         * @param {number} options.timeout
-         * @returns {Promise<function(): any>}
+         * @param {Object} [options]
+         * @param {boolean} [options.blocking]
+         * @param {number} [options.timeout]
+         * @returns {Promise<function(): void>}
          */
         acquire({ blocking = true, timeout } = {}) {
             return new Promise((resolve, reject) => {
@@ -93,11 +99,12 @@
         }
 
         /**
-         * @param {function(): (any | Promise<any>)} callback
-         * @param {Object} options
-         * @param {boolean} options.blocking
-         * @param {number?} options.timeout
-         * @returns {any}
+         * @template T
+         * @param {function(): (T | Promise<T>)} callback
+         * @param {Object} [options]
+         * @param {boolean} [options.blocking]
+         * @param {number} [options.timeout]
+         * @returns {Promise<T>}
          */
         async runExclusive(callback, { blocking = true, timeout } = {}) {
             const release = await this.acquire({ blocking, timeout })
