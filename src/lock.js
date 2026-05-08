@@ -3,7 +3,7 @@
  * @copyright 2026 PlasticHeart
  */
 
-!(root => {
+const { Lock, LockError, LockTimedoutError } = (() => {
     /**
      * @param {any} value
      * @returns {boolean}
@@ -120,5 +120,11 @@
         }
     }
 
-    Object.assign(root, { Lock, LockError, LockTimedoutError })
-})(this)
+    if (typeof globalThis != 'undefined') {
+        Object.assign(globalThis, { Lock, LockError, LockTimedoutError })
+    }
+
+    return { Lock, LockError, LockTimedoutError }
+})()
+
+export { Lock, LockError, LockTimedoutError }
